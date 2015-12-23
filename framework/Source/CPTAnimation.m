@@ -354,10 +354,10 @@ static CPTAnimation *instance = nil;
 
                         if ( [tweenedValue isKindOfClass:decimalClass] ) {
                             NSDecimal buffer = [(NSDecimalNumber *)tweenedValue decimalValue];
-
-                            IMP setterMethod = [boundObject methodForSelector:boundSetter];
-                            setterMethod(boundObject, boundSetter, buffer);
-                        }
+                            
+                            typedef void (*SetterType)(id, SEL, NSDecimal);
+                            SetterType setterMethod = (SetterType)[boundObject methodForSelector:boundSetter];
+                            setterMethod(boundObject, boundSetter, buffer);                        }
                         else if ( [tweenedValue isKindOfClass:valueClass] ) {
                             NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[boundObject methodSignatureForSelector:boundSetter]];
                             [invocation setTarget:boundObject];
@@ -375,8 +375,10 @@ static CPTAnimation *instance = nil;
                             free(buffer);
                         }
                         else {
-                            IMP setterMethod = [boundObject methodForSelector:boundSetter];
-                            setterMethod(boundObject, boundSetter, tweenedValue);
+                            NSDecimal buffer = [(NSDecimalNumber *)tweenedValue decimalValue];
+                            typedef void (*SetterType)(id, SEL, NSDecimal);
+                            SetterType setterMethod = (SetterType)[boundObject methodForSelector:boundSetter];
+                            setterMethod(boundObject, boundSetter, buffer);
                         }
 
                         if ( [animationDelegate respondsToSelector:@selector(animationDidUpdate:)] ) {
