@@ -17,14 +17,15 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '3.1.3'
   s.osx.deployment_target = '10.5'
-  
+
   s.source_files = 'framework/Source/*.{h,m}'
   s.exclude_files = '**/*{TestCase,Tests}.{h,m}'
   s.ios.source_files = 'framework/CorePlot-CocoaTouch.h', 'framework/iPhoneOnly/*.{h,m}'
   s.osx.source_files = 'framework/CorePlot.h', 'framework/MacOnly/*.{h,m}'
 
   s.framework   = 'QuartzCore'
-  
+  s.requires_arc = false
+
   s.prepare_command = <<-CMD
     dtrace -h -s framework/TestResources/CorePlotProbes.d -o framework/Source/CorePlotProbes.h
   CMD
